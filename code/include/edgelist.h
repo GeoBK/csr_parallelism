@@ -2,8 +2,9 @@
 #define EDGELIST_H
 
 struct Edge{
-    int src;   	  // id of a source vertex
-    int dest;     // id of a destination vertex
+    int src;   	    // id of a source vertex
+    int dest;       // id of a destination vertex
+    int key;        // key used for radix sort    
 };
 
 struct Edge * newEdgeArray(int numOfEdges);
