@@ -5,6 +5,7 @@ struct Edge{
     int src;   	    // id of a source vertex
     int dest;       // id of a destination vertex
     int key;        // key used for radix sort    
+    int trimmed_digit;   // quotient after division stored here
 };
 
 struct Edge * newEdgeArray(int numOfEdges);

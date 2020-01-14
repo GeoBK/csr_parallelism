@@ -80,6 +80,7 @@ void   loadEdgeArray(const char * fname, struct Edge *edgeArray){
         if( i == EOF ) 
            break;
         edgeArray[size].src = src;
+        edgeArray[size].trimmed_digit = src;
         edgeArray[size].dest = dest;
                  
         size++;

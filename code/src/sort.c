@@ -50,9 +50,7 @@ void countSortEdgesBySource(struct Edge *edges_sorted, struct Edge *edges, int n
 
 void radixSortEdgesBySource(struct Edge *edges_sorted, struct Edge *edges, int numVertices, int numEdges) {
     int i,occurence_map[10];
-    for(i=0;i<10;i++){
-        occurence_map[i]=0;
-    }
+    
     int number_of_digits=0;
     while(numVertices!=0){
         numVertices/=10;
@@ -60,21 +58,53 @@ void radixSortEdgesBySource(struct Edge *edges_sorted, struct Edge *edges, int n
     }
     int d;
     for(d=0;d<number_of_digits;d++){
+        for(i=0;i<10;i++){
+            occurence_map[i]=0;
+        }
         for(i=0; i<numEdges; i++){
-            edges[i].key = edges[i].src%10;
-            if(edges[i].src!=0) edges[i].src=edges[i].src/10;
+            edges[i].key = edges[i].trimmed_digit%10;
+            if(edges[i].trimmed_digit!=0) edges[i].trimmed_digit=edges[i].trimmed_digit/10;
             occurence_map[edges[i].key]++;
         }
         for(i=1;i<10;i++){
             occurence_map[i]=occurence_map[i]+occurence_map[i-1];
         }
         for(i=numEdges-1;i>=0;i--){
-            edges_sorted[occurence_map[edges[i].key]--]=edges[i];
+            edges_sorted[--occurence_map[edges[i].key]]=edges[i];
         }
         for(i=0;i<numEdges;i++){            
-            edges[i]=edges_sorted[i];
-        }
-        
+            edges[i]=edges_sorted[i];            
+        }        
     }
     
+}
+
+void radixSortEdgesBySourceParallel(struct Edge *edges_sorted, struct Edge *edges, int numVertices, int numEdges) {
+    int i,occurence_map[10];
+    
+    int number_of_digits=0;
+    while(numVertices!=0){
+        numVertices/=10;
+        number_of_digits++;
+    }
+    int d;
+    for(d=0;d<number_of_digits;d++){
+        for(i=0;i<10;i++){
+            occurence_map[i]=0;
+        }
+        for(i=0; i<numEdges; i++){
+            edges[i].key = edges[i].trimmed_digit%10;
+            if(edges[i].trimmed_digit!=0) edges[i].trimmed_digit=edges[i].trimmed_digit/10;
+            occurence_map[edges[i].key]++;
+        }
+        for(i=1;i<10;i++){
+            occurence_map[i]=occurence_map[i]+occurence_map[i-1];
+        }
+        for(i=numEdges-1;i>=0;i--){
+            edges_sorted[--occurence_map[edges[i].key]]=edges[i];
+        }
+        for(i=0;i<numEdges;i++){            
+            edges[i]=edges_sorted[i];            
+        }        
+    }    
 }

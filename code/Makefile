@@ -14,7 +14,7 @@ CC				  = gcc
 INC = 	-I$(APP_DIR)/$(INC_DIR)/
 		
 # flags
-CFLAGS            = -O3 -Wall -m64 -fopenmp -g
+CFLAGS            = -Wall -m64 -fopenmp -g
 
 all: test
 

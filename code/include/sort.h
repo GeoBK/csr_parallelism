@@ -7,4 +7,8 @@
 // Complexity: O(E + V)
 void countSortEdgesBySource(struct Edge *edges_sorted, struct Edge *edges, int numVertices, int numEdges);
 
+void radixSortEdgesBySource(struct Edge *edges_sorted, struct Edge *edges, int numVertices, int numEdges);
+
+// void radixSortEdgesBySourceParallel(struct Edge *edges_sorted, struct Edge *edges, int numVertices, int numEdges);
+
 #endif

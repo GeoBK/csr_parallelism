@@ -21,10 +21,10 @@ void printMessageWithtime(const char * msg, double time){
 int main(void) {
 
     
-    // const char * fname = "./datasets/test/test.txt";
+    const char * fname = "./datasets/test/test.txt";
     // const char * fname = "./datasets/wiki-vote/wiki-Vote.txt";
     // const char * fname = "./datasets/RMAT/RMAT22";
-    const char * fname = "./datasets/facebook/facebook_combined.txt";
+    // const char * fname = "./datasets/facebook/facebook_combined.txt";
     
     int numOfVertices = 0;
     int numOfEdges = 0;
@@ -42,20 +42,20 @@ int main(void) {
     // populate the edge array from file
     loadEdgeArray(fname, edgeArray);
     
-
+    printEdgeArray(edgeArray, numOfEdges); // print the edge list unsorted 
 
     /*the function you need to optimize*/
     // radixSortEdgesBySource(sortedEdgeArray, edges, numVertices, numEdges);
     Start(timer);
-    countSortEdgesBySource(sortedEdgeArray, edgeArray, numOfVertices, numOfEdges);
+    radixSortEdgesBySource(sortedEdgeArray, edgeArray, numOfVertices, numOfEdges);
     Stop(timer);
     printMessageWithtime("Time Sorting (Seconds)",Seconds(timer));
     /*the function you need to optimize*/
 
 
     // if you want to check
-    // printEdgeArray(edgeArray, numOfEdges); // print the edge list unsorted 
-    // printEdgeArray(sortedEdgeArray, numOfEdges); 
+    
+    printEdgeArray(sortedEdgeArray, numOfEdges); 
 
     mapVertices(vertexArray, sortedEdgeArray, numOfVertices, numOfEdges);
 
