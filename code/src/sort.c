@@ -61,6 +61,7 @@ void radixSortEdgesBySource(struct Edge *edges_sorted, struct Edge *edges, int n
         for(i=0;i<10;i++){
             occurence_map[i]=0;
         }
+        
         for(i=0; i<numEdges; i++){
             edges[i].key = edges[i].trimmed_digit%10;
             if(edges[i].trimmed_digit!=0) edges[i].trimmed_digit=edges[i].trimmed_digit/10;
@@ -74,12 +75,15 @@ void radixSortEdgesBySource(struct Edge *edges_sorted, struct Edge *edges, int n
         }
         for(i=0;i<numEdges;i++){            
             edges[i]=edges_sorted[i];            
-        }        
+        }
+        //printEdgeArray(edges, numEdges); 
+        
     }
     
 }
 
 void radixSortEdgesBySourceParallel(struct Edge *edges_sorted, struct Edge *edges, int numVertices, int numEdges) {
+    
     int i,occurence_map[10];
     
     int number_of_digits=0;
@@ -88,11 +92,20 @@ void radixSortEdgesBySourceParallel(struct Edge *edges_sorted, struct Edge *edge
         number_of_digits++;
     }
     int d;
+    int num_threads,num_threads_2;
+    omp_set_num_threads(4);
     for(d=0;d<number_of_digits;d++){
         for(i=0;i<10;i++){
             occurence_map[i]=0;
-        }
+        }        
+        
+        #pragma omp parallel for reduction(+:occurence_map[:10]), schedule (static)
         for(i=0; i<numEdges; i++){
+            int id=omp_get_thread_num();
+            if(id==0)
+            {
+                num_threads= omp_get_num_threads();
+            }
             edges[i].key = edges[i].trimmed_digit%10;
             if(edges[i].trimmed_digit!=0) edges[i].trimmed_digit=edges[i].trimmed_digit/10;
             occurence_map[edges[i].key]++;
@@ -103,8 +116,19 @@ void radixSortEdgesBySourceParallel(struct Edge *edges_sorted, struct Edge *edge
         for(i=numEdges-1;i>=0;i--){
             edges_sorted[--occurence_map[edges[i].key]]=edges[i];
         }
-        for(i=0;i<numEdges;i++){            
+        #pragma omp parallel for schedule (static)
+        for(i=0;i<numEdges;i++){
+            int id2=omp_get_thread_num();   
+            if(id2==0)
+            {
+                num_threads_2= omp_get_num_threads();
+            }       
             edges[i]=edges_sorted[i];            
-        }        
-    }    
+        }
+    }
+    printf("---------------------------------------------------------------\n");
+    printf(" Number of threads : %d \n",num_threads);
+    printf(" Number of threads in second loop : %d \n",num_threads_2);
+    printf("---------------------------------------------------------------\n");
+    
 }
